@@ -1,6 +1,7 @@
 
 var stream = require('stream')
 var levelup = require('levelup')
+var inherits = require('util').inherits
 
 var ReadStream = function(db, opts) {
   var that = this
@@ -16,7 +17,7 @@ var ReadStream = function(db, opts) {
       that.push(null)
     })
 }
-ReadStream.prototype = new stream.Readable()
+inherits(ReadStream, stream.Readable)
 
 ReadStream.prototype._read = function(n) {
   this.oldStream.resume()

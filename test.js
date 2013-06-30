@@ -35,10 +35,24 @@ describe('levelup-readable', function() {
     var i = 0
     var stream = new ReadStream(db)
       .on('readable', function() {
+        console.log('called')
         var data = stream.read()
-        assert.deepEqual(data, testData[i])
-        i++
+        if (data) {
+          assert.deepEqual(data, testData[i])
+          i++
+        }
       })
       .on('end', done)
+  })
+  it('should pipe the ReadStream into a custom WriteStream', function(done) {
+    var result = []
+    var writeStream = new stream.Writable()
+    writeStream._write = function(data, cb) {
+      result.push(data)
+      cb()
+    }
+    new ReadStream(db).pipe(writeStream).on('end', function() {
+      console.log(result)
+    })
   })
 })
