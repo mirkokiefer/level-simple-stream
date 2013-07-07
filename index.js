@@ -4,9 +4,7 @@ var levelup = require('levelup')
 var createIterator = require('stream-iterator')
 
 var createLevelIterator = function(db, opts) {
-  var levelStream = db.createReadStream(opts)
-  var wrappedStream = new stream.Readable({objectMode: true}).wrap(levelStream)
-  return createIterator(wrappedStream)
+  return db.db.iterator(opts)
 }
 
 module.exports = createLevelIterator

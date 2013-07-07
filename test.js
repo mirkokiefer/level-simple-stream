@@ -29,8 +29,8 @@ describe('levelup-readable', function() {
     var iterator = createIterator(db)
 
     var i = 0
-    iterators.forEach(iterator, function(err, data) {
-      assert.deepEqual(data, testData[i])
+    iterators.forEach(iterator, function(err, key, value) {
+      assert.deepEqual({key: key, value: value}, testData[i])
       i++
     }, function() {
       assert.equal(i, 5)
