@@ -2,8 +2,7 @@
 var assert = require('assert')
 var levelup = require('levelup')
 var MemDOWN = require('memdown')
-var ReadStream = require('./index')
-var stream = require('stream')
+var createIterator = require('./index')
 
 var testData = [
   {key: 'a', value: '1'},
@@ -25,34 +24,21 @@ describe('levelup-readable', function() {
     })
     db.batch(updates, done)
   })
-  it('should check data was written', function(done) {
-    db.get('b', function(err, res) {
-      assert.equal(res, '2')
-      done()
-    })
-  })
-  it('should open a new read stream', function(done) {
+  it('should open an iterator', function(done) {
     var i = 0
-    var stream = new ReadStream(db)
-      .on('readable', function() {
-        console.log('called')
-        var data = stream.read()
-        if (data) {
-          assert.deepEqual(data, testData[i])
-          i++
+    var iterator = createIterator(db)
+
+    var iterate = function() {
+      iterator.next(function(err, data) {
+        if (!data) {
+          assert.equal(i, 5)
+          return done()
         }
-      })
-      .on('end', done)
-  })
-  it('should pipe the ReadStream into a custom WriteStream', function(done) {
-    var result = []
-    var writeStream = new stream.Writable()
-    writeStream._write = function(data, cb) {
-      result.push(data)
-      cb()
+        assert.deepEqual(data, testData[i])
+        i++
+        setTimeout(iterate, 50)
+      })  
     }
-    new ReadStream(db).pipe(writeStream).on('end', function() {
-      console.log(result)
-    })
+    iterate()
   })
 })

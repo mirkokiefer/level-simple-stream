@@ -1,7 +1,7 @@
 {
-  "name": "levelup-readable",
+  "name": "levelup-iterator",
   "version": "0.0.1",
-  "description": "a streams2 conform readable stream for node-levelup",
+  "description": "an iterator for node-levelup",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/mocha"
@@ -10,9 +10,10 @@
   "license": "BSD",
   "dependencies": {
     "levelup": "~0.10.0",
-    "memdown": "~0.2.0"
+    "stream-iterator": "0.0.1"
   },
   "devDependencies": {
-    "mocha": "~1.11.0"
+    "mocha": "~1.11.0",
+    "memdown": "~0.2.0"
   }
 }
