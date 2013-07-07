@@ -3,6 +3,7 @@ var assert = require('assert')
 var levelup = require('levelup')
 var MemDOWN = require('memdown')
 var createIterator = require('./index')
+var iterators = require('async-iterators')
 
 var testData = [
   {key: 'a', value: '1'},
@@ -25,20 +26,15 @@ describe('levelup-readable', function() {
     db.batch(updates, done)
   })
   it('should open an iterator', function(done) {
-    var i = 0
     var iterator = createIterator(db)
 
-    var iterate = function() {
-      iterator.next(function(err, data) {
-        if (!data) {
-          assert.equal(i, 5)
-          return done()
-        }
-        assert.deepEqual(data, testData[i])
-        i++
-        setTimeout(iterate, 50)
-      })  
-    }
-    iterate()
+    var i = 0
+    iterators.forEach(iterator, function(err, data) {
+      assert.deepEqual(data, testData[i])
+      i++
+    }, function() {
+      assert.equal(i, 5)
+      done()
+    })
   })
 })
