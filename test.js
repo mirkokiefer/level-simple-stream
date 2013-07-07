@@ -14,6 +14,8 @@ var testData = [
   {key: 'e', value: '5'}  
 ]
 
+var dbname = 'testdb'
+
 var testBackend = function(db) {
   describe('levelup-readable', function() {
     before(function(done) {
@@ -24,7 +26,7 @@ var testBackend = function(db) {
       db.batch(updates, done)
     })
     it('should open an iterator', function(done) {
-      var iterator = createIterator(db)
+      var iterator = createIterator(db, {keyAsBuffer: false, valueAsBuffer: false})
 
       var i = 0
       iterators.forEach(iterator, function(err, key, value) {
@@ -39,6 +41,22 @@ var testBackend = function(db) {
 }
 
 describe('memdown iterator', function() {
-  var db = new memdown('test')
+  var db = new memdown(dbname)
   testBackend(db)
+})
+
+describe('leveldown iterator', function() {
+  var db = new leveldown(dbname)
+
+  before(function(done) {
+    db.open(done)
+  })
+
+  testBackend(db)
+
+  after(function(done) {
+    db.close(function() {
+      leveldown.destroy(dbname, done)      
+    })
+  })
 })
