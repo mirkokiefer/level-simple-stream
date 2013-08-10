@@ -9,7 +9,7 @@
   "author": "Mirko Kiefer <mail@mirkokiefer.com>",
   "license": "BSD",
   "dependencies": {
-    "levelup": "~0.10.0",
+    "levelup": "~0.12.0",
     "stream-iterator": "0.0.1"
   },
   "devDependencies": {
