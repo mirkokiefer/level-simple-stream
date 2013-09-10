@@ -1,3 +1,7 @@
 
-#levelup-iterator
-This is actually just a test of the iterator interface for levelup backends.
+#level-simple-stream
+A [simple-stream] source and sink for [LevelUP](https://github.com/rvagg/node-levelup) and level backends like [LevelDOWN](https://github.com/rvagg/node-leveldown).
+
+###createIteratorSource(levelBackend, options) -> stream
+
+- `levelBackend`: any LevelDB backend that conforms to [Abstract LevelDOWN](https://github.com/rvagg/node-abstract-leveldown)

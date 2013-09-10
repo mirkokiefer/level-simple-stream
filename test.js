@@ -3,8 +3,8 @@ var assert = require('assert')
 var levelup = require('levelup')
 var memdown = require('memdown')
 var leveldown = require('leveldown')
-var createIterator = require('./index')
-var iterators = require('async-iterators')
+var createIteratorSource = require('./index').createIteratorSource
+var streamUtils = require('simple-stream')
 
 var testData = [
   {key: 'a', value: '1'},
@@ -26,13 +26,13 @@ var testBackend = function(db) {
       db.batch(updates, done)
     })
     it('should open an iterator', function(done) {
-      var iterator = createIterator(db, {keyAsBuffer: false, valueAsBuffer: false})
+      var iterator = createIteratorSource(db, {keyAsBuffer: false, valueAsBuffer: false})
 
       var i = 0
-      iterators.forEach(iterator, function(err, key, value) {
-        assert.deepEqual({key: key, value: value}, testData[i])
+      streamUtils.forEach(iterator, function(each) {
+        assert.deepEqual({key: each.key, value: each.value}, testData[i])
         i++
-      }, function() {
+      })(function() {
         assert.equal(i, 5)
         done()
       })
