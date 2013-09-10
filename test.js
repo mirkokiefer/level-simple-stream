@@ -25,15 +25,10 @@ var testBackend = function(db) {
       })
       db.batch(updates, done)
     })
-    it('should open an iterator', function(done) {
-      var iterator = createIteratorSource(db, {keyAsBuffer: false, valueAsBuffer: false})
-
-      var i = 0
-      streamUtils.forEach(iterator, function(each) {
-        assert.deepEqual({key: each.key, value: each.value}, testData[i])
-        i++
-      })(function() {
-        assert.equal(i, 5)
+    it('should create a stream from an iterator', function(done) {
+      var stream = createIteratorSource(db, {keyAsBuffer: false, valueAsBuffer: false})
+      streamUtils.toArray(stream)(function(err, array) {
+        assert.deepEqual(array, testData)
         done()
       })
     })
