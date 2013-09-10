@@ -18,5 +18,5 @@
     "leveldown": "~0.6.2",
     "levelup": "~0.16.0"
   },
-  "keywords": ["simple-stream"]
+  "keywords": ["simple-stream", "leveldb", "level"]
 }
