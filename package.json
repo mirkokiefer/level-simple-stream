@@ -1,6 +1,6 @@
 {
   "name": "level-simple-stream",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "simple-stream source and sink for LevelUP and LevelDOWN",
   "homepage": "https://github.com/mirkokiefer/level-simple-stream",
   "main": "index.js",
@@ -9,12 +9,13 @@
   },
   "author": "Mirko Kiefer <mail@mirkokiefer.com>",
   "license": "BSD",
-  "dependencies": {},
+  "dependencies": {
+    "simple-stream": "~0.3.1"
+  },
   "devDependencies": {
     "mocha": "~1.11.0",
     "memdown": "~0.2.0",
     "leveldown": "~0.6.2",
-    "simple-stream": "~0.3.1",
     "levelup": "~0.16.0"
   },
   "keywords": ["simple-stream"]
