@@ -5,16 +5,16 @@
   "homepage": "https://github.com/mirkokiefer/level-simple-stream",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha"
+    "test": "node_modules/.bin/mocha -R spec"
   },
   "author": "Mirko Kiefer <mail@mirkokiefer.com>",
   "license": "BSD",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "mocha": "~1.11.0",
     "memdown": "~0.2.0",
     "leveldown": "~0.6.2",
-    "simple-stream": "~0.3.1"
+    "simple-stream": "~0.3.1",
+    "levelup": "~0.16.0"
   }
 }

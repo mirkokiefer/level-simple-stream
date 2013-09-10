@@ -1,13 +1,7 @@
 
 var streamUtils = require('simple-stream')
 
-// var createLevelStream = function(db, opts) {
-//   var readableStream = db.createReadStream(opts)
-//   var simpleStream = streamUtils.fromReadableStream(readableStream)
-//   return {read: simpleStream.read, abort: simpleStream.abort}
-// }
-
-function createIteratorSource(db, opts) {
+function fromDOWN(db, opts) {
   var iterator = db.iterator(opts)
   return {read: read, abort: iterator.end}
 
@@ -20,6 +14,13 @@ function createIteratorSource(db, opts) {
   }
 }
 
+var fromUP = function(db, opts) {
+  var readableStream = db.createReadStream(opts)
+  var simpleStream = streamUtils.fromReadableStream(readableStream)
+  return {read: simpleStream.read, abort: simpleStream.abort}
+}
+
 module.exports = {
-  createIteratorSource: createIteratorSource
+  fromDOWN: fromDOWN,
+  fromUP: fromUP
 }

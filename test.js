@@ -3,7 +3,9 @@ var assert = require('assert')
 var levelup = require('levelup')
 var memdown = require('memdown')
 var leveldown = require('leveldown')
-var createIteratorSource = require('./index').createIteratorSource
+var levelStream = require('./index')
+var fromDOWN = levelStream.fromDOWN
+var fromUP = levelStream.fromUP
 var streamUtils = require('simple-stream')
 
 var testData = [
@@ -19,14 +21,27 @@ var dbname = 'testdb'
 var testBackend = function(db) {
   describe('levelup-readable', function() {
     before(function(done) {
-      // write testData to db
-      var updates = testData.map(function(each) {
-        return {type: 'put', key: each.key, value: each.value}
+      db.open(function() {
+        // write testData to db
+        var updates = testData.map(function(each) {
+          return {type: 'put', key: each.key, value: each.value}
+        })
+        db.batch(updates, done)
       })
-      db.batch(updates, done)
     })
-    it('should create a stream from an iterator', function(done) {
-      var stream = createIteratorSource(db, {keyAsBuffer: false, valueAsBuffer: false})
+    after(function(done) {
+      db.close(done)
+    })
+    it('should create a stream from the LevelDOWN API', function(done) {
+      var stream = fromDOWN(db, {keyAsBuffer: false, valueAsBuffer: false})
+      streamUtils.toArray(stream)(function(err, array) {
+        assert.deepEqual(array, testData)
+        db.close(done)
+      })
+    })
+    it('should create a stream from LevelUP', function(done) {
+      var upDB = levelup(dbname, {db: function() { return db }})
+      var stream = fromUP(upDB, {keyAsBuffer: false, valueAsBuffer: false})
       streamUtils.toArray(stream)(function(err, array) {
         assert.deepEqual(array, testData)
         done()
@@ -35,23 +50,15 @@ var testBackend = function(db) {
   })
 }
 
-describe('memdown iterator', function() {
+describe('memdown stream', function() {
   var db = new memdown(dbname)
   testBackend(db)
 })
 
-describe('leveldown iterator', function() {
-  var db = new leveldown(dbname)
-
-  before(function(done) {
-    db.open(done)
-  })
-
-  testBackend(db)
-
+describe('leveldown stream', function() {
   after(function(done) {
-    db.close(function() {
-      leveldown.destroy(dbname, done)      
-    })
+    leveldown.destroy(dbname, done)      
   })
+  var db = new leveldown(dbname)
+  testBackend(db)
 })
